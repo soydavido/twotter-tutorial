@@ -5,9 +5,24 @@
             <div class="user-profile_admin-badge" v-if="user.isAdmin">
                 Admin
             </div>
-            <div class="user_profile_follower_count">
+            <div class="user_profile_follower_count" style="margin-top: 5px">
                 <strong>Followers: </strong>{{followers}}
             </div>
+            <form class="user-profile_create-twoot" @submit.prevent="createNewTwoot">
+                <label><strong>New Twoot</strong></label>
+                <textarea id="newTwoot" rows=4 v-model="newTwootContent"></textarea>
+                
+                <div class="user-profile_create-twoot-type">
+                    <label for="newTwootType"><strong>Type: </strong></label>
+                    <select id="newTwootType" v-model="selectedTwootType">
+                        <option :value="option.value" v-for="(option, index) in twootTypes" :key="index">
+                            {{ option.name }}
+                        </option>
+                    </select>
+                </div>
+
+                <button style="margin-top: 5px">Twoot</button>
+            </form>
         </div>
         <div class="user-profile_twoots-wrapper">
             <TwootItem 
@@ -30,6 +45,12 @@ export default {
   components: { TwootItem },
   data(){
     return{
+      newTwootContent: '',
+      selectedTwootType: 'instant',
+      twootTypes:[
+          {value: 'draft', name: 'Draft'},
+          {value: 'instant', name: 'Instant'}
+      ],
       followers: 0,
       user:{
         id: 1,
@@ -66,6 +87,18 @@ export default {
     },
     toggleFavourite(id){
         console.log(`Favourited Twoot #${id}`)
+    },
+    createNewTwoot(){
+        console.log(this.user.twoots);
+        if(this.newTwootContent && this.selectedTwootType != 'draft' ){
+            this.user.twoots.unshift( {
+                id: this.user.twoots.length +1,
+                content: this.newTwootContent
+            });
+            this.newTwootContent = '';
+        }
+        
+        
     }
   },
   mounted(){   //Cuando se construya el componente se correra todo lo que este aqui
@@ -99,7 +132,24 @@ export default {
     margin-right: auto;
     padding: 0 10px;
 }
+
 h1{
     margin: 0;
+}
+
+.user-profile_twoots-wrapper{
+    display: grid;
+    grid-gap: 10px;
+}
+
+.user-profile_create-twoot{
+    border-top: 1px solid DFE3E8;
+    display: flex;
+    flex-direction: column;
+    padding-top: 5px;
+}
+
+.user-profile_create-twoot-type{
+    margin-top: 5px;
 }
 </style>

@@ -52,5 +52,6 @@ export default {
 
 .twoot-item_user{
     font-weight: bold;
+    margin-bottom: 2px
 }
 </style>
